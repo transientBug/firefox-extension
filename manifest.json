@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "TransientBug",
+  "version": "1.0",
+
+  "applications": {
+    "gecko": {
+      "id": "firefox@transientbug.ninja"
+    }
+  },
+
+  "description": "Allows for quick bookmarking of websites in transientBug",
+
+  "icons": "icons/border-48.png",
+
+  "page_action": {
+    "browser_style": true,
+
+    "show_matches": ["*://*/"],
+
+    "default_icon": "icons/border-48.png",
+
+    "default_title": "TransientBug",
+    "default_popup": "popup/bookmark.html"
+  }
+}
