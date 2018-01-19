@@ -1,7 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "TransientBug",
+  "name": "transientBug",
   "version": "1.0",
+  "description": "Allows for quick bookmarking of websites in transientBug",
+  "homepage_url": "https://github.com/transientBug/firefox-extension",
 
   "applications": {
     "gecko": {
@@ -9,18 +11,40 @@
     }
   },
 
-  "description": "Allows for quick bookmarking of websites in transientBug",
+  "icons": {
+    "48": "icons/bug_logo.png"
+  },
 
-  "icons": "icons/border-48.png",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage"
+  ],
 
   "page_action": {
     "browser_style": true,
 
     "show_matches": ["*://*/"],
 
-    "default_icon": "icons/border-48.png",
+    "default_icon": "icons/bug_logo.png",
 
-    "default_title": "TransientBug",
+    "default_title": "transientBug",
     "default_popup": "popup/bookmark.html"
-  }
+  },
+
+  "options_ui": {
+    "page": "options/options.html"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.transientbug.ninja/*", "*://localhost/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
