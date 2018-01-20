@@ -21,13 +21,8 @@ updateActiveTab()
 
 
 const handlers = {
-  auth_data: (event) => {
-    let message = event.message
-
-    browser.storage.local.set({
-      email: message.email,
-      authToken: message.authToken
-    })
+  authData: (event) => {
+    browser.storage.local.set(event.payload)
 
     console.log("Replying to content script with ack")
     browser.tabs.query({active: true, currentWindow: true}) .then((tabs) => {

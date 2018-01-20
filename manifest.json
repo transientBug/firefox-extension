@@ -25,6 +25,7 @@
     "browser_style": true,
 
     "show_matches": ["*://*/"],
+    "hide_matches": ["*://*.transientbug.ninja/*", "*://localhost/*"],
 
     "default_icon": "icons/bug_logo.png",
 
