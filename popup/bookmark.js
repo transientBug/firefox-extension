@@ -26,22 +26,22 @@ function onGot(result) {
       let tab = tabs[0]
       console.log("Bookmarking tab", tab)
 
-      let url = "https://localhost:3000/api/v1/bookmarks/upsert"
+      let url = `http://localhost:3000/api/v1/bookmarks?auth_token=${result.email}:${result.apitoken}`
       let data = { url: tab.url, title: tab.title }
 
       fetch(url, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(data),
         headers: new Headers({
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         })
       }).then(res => res.json())
-      .catch(error => console.error('Error:', error))
       .then((response) => {
-        console.log('Success:', response)
+        console.log("Success:", response)
         document.querySelector("#loading-content").classList.add("hidden")
         document.querySelector("#popup-content").classList.remove("hidden")
       })
+      .catch(error => console.error("Error:", error))
     })
   }
 }
