@@ -8,13 +8,13 @@ function onGot(result) {
     document.querySelector("#login-content").classList.add("hidden")
   }
 
-  if(!result.email || !result.authToken) {
+  if(!result.email || !result.apitoken) {
     document.querySelector("#login-content").classList.remove("hidden")
     document.addEventListener("click", (event) => {
       if(event.target.id == "login") {
         browser.tabs.create({
           //url: "https://transientbug.ninja/extension-pair"
-          url: "http://localhost:3000/extension-pair"
+          url: "http://localhost:3000/profile?pairing=true"
         }).then(onCreated, onError)
       }
     })
@@ -25,6 +25,23 @@ function onGot(result) {
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       let tab = tabs[0]
       console.log("Bookmarking tab", tab)
+
+      let url = "https://localhost:3000/api/v1/bookmarks/upsert"
+      let data = { url: tab.url, title: tab.title }
+
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then(res => res.json())
+      .catch(error => console.error('Error:', error))
+      .then((response) => {
+        console.log('Success:', response)
+        document.querySelector("#loading-content").classList.add("hidden")
+        document.querySelector("#popup-content").classList.remove("hidden")
+      })
     })
   }
 }

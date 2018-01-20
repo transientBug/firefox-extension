@@ -3,14 +3,14 @@ function saveOptions(e) {
 
   browser.storage.local.set({
     email: document.querySelector("#email").value,
-    authToken: document.querySelector("#authToken").value
+    apitoken: document.querySelector("#apitoken").value
   })
 }
 
 function restoreOptions() {
   function onGot(result) {
     document.querySelector("#email").value = result.email
-    document.querySelector("#authToken").value = result.authToken
+    document.querySelector("#apitoken").value = result.apitoken
   }
 
   function onError(error) {
