@@ -70,6 +70,10 @@ async function tabs() {
 
   console.log("Response was a success", json)
 
+  browser.pageAction.setIcon({
+    tabId: tab.id, path: "icons/ic_bookmark_black_24dp_2x.png"
+  })
+
   document.querySelector("#loading-content").classList.add("hidden")
   document.querySelector("#popup-content").classList.remove("hidden")
 

@@ -40,8 +40,14 @@ async function updateTab(tabs) {
 
   if(response.status == 302) {
     console.log("Bookmark exists for tab", activeTab)
+    browser.pageAction.setIcon({
+      tabId: activeTab.id, path: "icons/ic_bookmark_black_24dp_2x.png"
+    })
   } else {
     console.log("Bookmark does not exist for tab", activeTab)
+    browser.pageAction.setIcon({
+      tabId: activeTab.id, path: "icons/ic_bookmark_border_black_24dp_2x.png"
+    })
   }
 }
 

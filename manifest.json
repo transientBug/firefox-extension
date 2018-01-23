@@ -27,7 +27,7 @@
     "show_matches": ["*://*/"],
     "hide_matches": ["*://*.transientbug.ninja/*", "*://localhost/*"],
 
-    "default_icon": "icons/bug_logo.png",
+    "default_icon": "icons/ic_bookmark_border_black_24dp_2x.png",
 
     "default_title": "transientBug",
     "default_popup": "popup/bookmark.html"
@@ -43,7 +43,7 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*.transientbug.ninja/*", "*://localhost/*"],
+      "matches": ["*://*.transientbug.ninja/profile*", "*://localhost/profile*"],
       "js": ["content-script.js"],
       "run_at": "document_idle"
     }
