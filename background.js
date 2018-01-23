@@ -9,6 +9,41 @@ async function updateActiveTab(tabs) {
   await browser.pageAction.show(activeTab.id)
 }
 
+// https://gist.github.com/beaucharman/e46b8e4d03ef30480d7f4db5a78498ca
+function throttle(callback, wait, context=this) {
+  let timeout = null
+  let callbackArgs = null
+
+  const later = () => {
+    callback.apply(context, callbackArgs)
+    timeout = null
+  }
+
+  return (...args) => {
+    if (!timeout) {
+      callbackArgs = args
+      timeout = setTimeout(later, wait)
+    }
+  }
+}
+
+async function checkBookmark(url, fetchParams, activeTab) {
+  console.log("Checking if bookmark exists for tab", activeTab)
+  let response = await fetch(url, fetchParams)
+
+  if(response.status == 302) {
+    console.log("Bookmark exists for tab", activeTab)
+    browser.pageAction.setIcon({
+      tabId: activeTab.id, path: "icons/ic_bookmark_black_24dp_2x.png"
+    })
+  } else {
+    console.log("Bookmark does not exist for tab", activeTab)
+    browser.pageAction.setIcon({
+      tabId: activeTab.id, path: "icons/ic_bookmark_border_black_24dp_2x.png"
+    })
+  }
+}
+
 // Enable and show the page action. Supposedly if you have a show_matches in
 // the manifest, this isn't needed but that hasn't been working for me.
 async function updateTab(tabs) {
@@ -35,20 +70,7 @@ async function updateTab(tabs) {
     headers: headers
   }
 
-  console.log("Checking if bookmark exists for tab", activeTab)
-  let response = await fetch(url, fetchParams)
-
-  if(response.status == 302) {
-    console.log("Bookmark exists for tab", activeTab)
-    browser.pageAction.setIcon({
-      tabId: activeTab.id, path: "icons/ic_bookmark_black_24dp_2x.png"
-    })
-  } else {
-    console.log("Bookmark does not exist for tab", activeTab)
-    browser.pageAction.setIcon({
-      tabId: activeTab.id, path: "icons/ic_bookmark_border_black_24dp_2x.png"
-    })
-  }
+  throttle(checkBookmark(url, fetchParams, activeTab), 1000)
 }
 
 // listen to tab URL changes
