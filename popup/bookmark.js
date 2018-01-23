@@ -1,29 +1,9 @@
-function onError(error) {
-  console.log(`Error ${error}`)
-}
-
 const buttonHandlers = {
-  login: (event) => {
+  login: (resultOfGet, event) => {
     browser.tabs.create({
-      //url: "https://transientbug.ninja/extension-pair"
-      url: "http://localhost:3000/profile?pairing=true"
-    }).then(onLoginOpened, onError)
+      url: `${resultOfGet.endpoint}/profile?pairing=true`
+    }).then(onLoginOpened)
   }
-}
-
-function onGetStorage(result) {
-  this.result = result
-
-  if(!result.email || !result.apitoken) {
-    requestLogin()
-  } else {
-    startBookmarking()
-  }
-}
-
-function requestLogin() {
-  console.log("Unauthed, requesting login with a button. yolo.")
-  document.querySelector("#login-content").classList.remove("hidden")
 }
 
 function onLoginOpened(tab) {
@@ -31,17 +11,30 @@ function onLoginOpened(tab) {
   document.querySelector("#login-content").classList.add("hidden")
 }
 
-function startBookmarking() {
-  console.log("Starting the bookmarking process")
-  document.querySelector("#loading-content").classList.remove("hidden")
-  browser.tabs.query({active: true, currentWindow: true}).then(bookmarkTab)
-}
+async function tabs() {
+  let settings = await browser.storage.local.get()
 
-function bookmarkTab(tabs) {
-  let tab = tabs[0]
+  if(!settings.email || !settings.apitoken) {
+    console.log("Unauthed, requesting login with a button. yolo.")
+    document.addEventListener("click", (event) => buttonHandlers[event.target.id](settings, event))
+
+    document.querySelector("#login-content").classList.remove("hidden")
+
+    return
+  }
+
+  let activeTabs = await browser.tabs.query({active: true, currentWindow: true})
+
+  console.log("Starting the bookmarking process")
+
+  document.querySelector("#loading-content").classList.remove("hidden")
+
+  let tab = activeTabs[0]
+
   console.log("Sending bookmark request for active tab", tab)
 
-  let url = `http://localhost:3000/api/v1/bookmarks?auth_token=${this.result.email}:${this.result.apitoken}`
+  let url = `${settings.endpoint}/api/v1/bookmarks?auth_token=${settings.email}:${settings.apitoken}`
+
   let data = {
     data: {
       type: "bookmark",
@@ -63,27 +56,24 @@ function bookmarkTab(tabs) {
     headers: headers
   }
 
-  fetch(url, fetchParams).then(onResponse).catch(onError)
-}
+  console.log(`Sending to ${url}`, fetchParams)
 
-function onResponse(response) {
+  let response = await fetch(url, fetchParams)
+
   console.log("Got response back from server", response)
 
   if(!response.ok) {
     throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
   }
 
-  let json = response.json()
+  let json = await response.json()
 
   console.log("Response was a success", json)
+
   document.querySelector("#loading-content").classList.add("hidden")
   document.querySelector("#popup-content").classList.remove("hidden")
+
+  // Setup handling of unfocus events on the form to update the bookmark
 }
 
-function setup() {
-  browser.storage.local.get().then(onGetStorage, onError)
-
-  document.addEventListener("click", (event) => buttonHandlers(event.target.id))
-}
-
-setup()
+tabs()
