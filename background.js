@@ -1,83 +1,24 @@
 // Enable and show the page action. Supposedly if you have a show_matches in
 // the manifest, this isn't needed but that hasn't been working for me.
 async function updateActiveTab(tabs) {
-  let activeTabs = await browser.tabs.query({active: true, currentWindow: true})
-  let activeTab = activeTabs[0]
+  const activeTabs = await browser.tabs.query({active: true, currentWindow: true})
 
-  console.log("Window changed or updated, showing page action")
-
-  await browser.pageAction.show(activeTab.id)
-}
-
-// https://gist.github.com/beaucharman/e46b8e4d03ef30480d7f4db5a78498ca
-function throttle(callback, wait, context=this) {
-  let timeout = null
-  let callbackArgs = null
-
-  const later = () => {
-    callback.apply(context, callbackArgs)
-    timeout = null
+  if(activeTabs.length < 1) {
+    throw new Error("No active tabs found!")
   }
 
-  return (...args) => {
-    if (!timeout) {
-      callbackArgs = args
-      timeout = setTimeout(later, wait)
-    }
-  }
-}
+  const activeTab = activeTabs[0]
 
-async function checkBookmark(url, fetchParams, activeTab) {
-  console.log("Checking if bookmark exists for tab", activeTab)
-  let response = await fetch(url, fetchParams)
+  console.log("Window changed or updated, showing page action", activeTab)
 
-  if(response.status == 302) {
-    console.log("Bookmark exists for tab", activeTab)
-    browser.pageAction.setIcon({
-      tabId: activeTab.id, path: "icons/ic_bookmark_black_24dp_2x.png"
-    })
-  } else {
-    console.log("Bookmark does not exist for tab", activeTab)
-    browser.pageAction.setIcon({
-      tabId: activeTab.id, path: "icons/ic_bookmark_border_black_24dp_2x.png"
-    })
-  }
-}
-
-// Enable and show the page action. Supposedly if you have a show_matches in
-// the manifest, this isn't needed but that hasn't been working for me.
-async function updateTab(tabs) {
-  let activeTabs = await browser.tabs.query({active: true, currentWindow: true})
-  let activeTab = activeTabs[0]
-  let settings = await browser.storage.local.get()
-
-  console.log("Tab changed or updated, showing page action")
-
-  await browser.pageAction.show(activeTab.id)
-
-  if(!settings.email || !settings.apitoken)
-    return
-
-  let url = `${settings.endpoint}/api/v1/bookmarks/check?auth_token=${settings.email}:${settings.apitoken}&url=${activeTab.url}`
-
-  let headers = new Headers({
-    "Content-Type": "application/vnd.api+json",
-    "Accept": "application/vnd.api+json"
-  })
-
-  let fetchParams = {
-    method: "GET",
-    headers: headers
-  }
-
-  throttle(checkBookmark(url, fetchParams, activeTab), 1000)
+  browser.pageAction.show(activeTab.id)
 }
 
 // listen to tab URL changes
-browser.tabs.onUpdated.addListener(updateTab)
+browser.tabs.onUpdated.addListener(updateActiveTab)
 
 // listen to tab switching
-browser.tabs.onActivated.addListener(updateTab)
+browser.tabs.onActivated.addListener(updateActiveTab)
 
 // listen for window switching
 browser.windows.onFocusChanged.addListener(updateActiveTab)
@@ -91,8 +32,8 @@ const handlers = {
     browser.storage.local.set(event.payload)
 
     console.log("Replying to content script with ack")
-    browser.tabs.query({active: true, currentWindow: true}) .then((tabs) => {
-      browser.tabs.sendMessage(tabs[0].id, {
+    browser.tabs.getCurrent().then((activeTab) => {
+      browser.tabs.sendMessage(activeTab.id, {
         type: "ack"
       })
     })

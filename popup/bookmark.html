@@ -7,21 +7,21 @@
 </head>
 
 <body>
-  <div id="login-content" class="hidden">
-    <button id="login">Login</button>
+  <div class="hidden login-panel">
+    <button class="login-button">Login</button>
   </div>
 
-  <div id="loading-content" class="hidden">
+  <div class="hidden saving-panel">
     <p>Saving ...</p>
   </div>
 
-  <div id="popup-content" class="hidden">
+  <div class="hidden details-panel">
     <label>Tags: <input type=text name="tags" /></label>
   </div>
 
-  <div id="error-content" class="hidden">
+  <div class="hidden error-panel">
     <p>Something went wrong while trying to bookmark this page. Maybe try again?</p>
-    <p id="error"></p>
+    <p id="error-message"></p>
   </div>
 
   <script src="bookmark.js"></script>

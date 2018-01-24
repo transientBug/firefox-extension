@@ -1,5 +1,6 @@
 {
   "manifest_version": 2,
+
   "name": "transientBug",
   "version": "1.0",
   "description": "Allows for quick bookmarking of websites in transientBug",
@@ -7,7 +8,8 @@
 
   "applications": {
     "gecko": {
-      "id": "firefox@transientbug.ninja"
+      "id": "firefox@transientbug.ninja",
+      "strict_min_version": "57.0"
     }
   },
 
@@ -17,7 +19,6 @@
 
   "permissions": [
     "activeTab",
-    "tabs",
     "storage"
   ],
 
@@ -25,11 +26,14 @@
     "browser_style": true,
 
     "show_matches": ["*://*/"],
-    "hide_matches": ["*://*.transientbug.ninja/*", "*://localhost/*"],
+    "hide_matches": [
+      "*://*.transientbug.ninja/*",
+      "*://localhost/*"
+    ],
 
     "default_icon": "icons/ic_bookmark_border_black_24dp_2x.png",
 
-    "default_title": "transientBug",
+    "default_title": "Save to transientBug",
     "default_popup": "popup/bookmark.html"
   },
 
@@ -43,8 +47,13 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*.transientbug.ninja/profile*", "*://localhost/profile*"],
-      "js": ["content-script.js"],
+      "matches": [
+        "*://*.transientbug.ninja/profile*",
+        "*://localhost/profile*"
+      ],
+
+      "js": ["content-script.js"]
+      ,
       "run_at": "document_idle"
     }
   ]
