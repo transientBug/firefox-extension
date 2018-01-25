@@ -1,5 +1,5 @@
-const BOOKMARK_ICON_OUTLINE = "icons/ic_bookmark_border_black_24dp_2x.png"
-const BOOKMARK_ICON_FILL    = "icons/ic_bookmark_black_24dp_2x.png"
+const BOOKMARK_ICON_OUTLINE = "../icons/ic_bookmark_border_black_24dp_2x.png"
+const BOOKMARK_ICON_FILL    = "../icons/ic_bookmark_black_24dp_2x.png"
 
 
 const App = {
@@ -208,11 +208,9 @@ App.registerPanel(P_SAVING, {
 
     const json = await response.json()
 
-    // Do stuff with the JSON
-
     App.changeIcon(BOOKMARK_ICON_FILL)
 
-    App.showPanel(P_DETAILS)
+    return App.showPanel(P_DETAILS, json)
   },
 
   // This method is called when the panel is hidden
@@ -224,6 +222,7 @@ App.registerPanel(P_SAVING, {
 
 App.registerPanel(P_DETAILS, {
   panelSelector: ".details-panel",
+  _payload: {},
 
   // This method is called when the object is registered.
   initialize() {
@@ -231,7 +230,17 @@ App.registerPanel(P_DETAILS, {
   },
 
   // This method is called when the panel is about to be shown.
-  prepare() {
+  prepare(json) {
+    this._payload = json
+
+    const titleInput = document.getElementById("details-title")
+    const tagsInput = document.getElementById("details-tags")
+    const descriptionInput = document.getElementById("details-description")
+
+    titleInput.value = json.data.attributes.title
+    tagsInput.value = json.data.attributes.tags.join(", ")
+    descriptionInput.innerText = json.data.attributes.description
+
     return Promise.resolve(null)
   },
 
