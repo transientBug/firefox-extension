@@ -1,9 +1,0 @@
-html, body {
-  width: 300px;
-  max-width: 100%;
-  padding: 1em;
-}
-
-.hidden {
-  display: none;
-}

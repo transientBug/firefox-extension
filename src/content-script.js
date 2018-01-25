@@ -9,7 +9,7 @@ browser.runtime.onMessage.addListener((event) => {
   extensionHandlers[event.type](event)
 })
 
-let authData = Object.assign({}, document.querySelector("#authData").dataset)
+const authData = Object.assign({}, document.querySelector("#authData").dataset)
 if(authData) {
   browser.runtime.sendMessage({ type: "authData", payload: authData })
 }
