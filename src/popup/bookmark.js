@@ -127,26 +127,7 @@ App.registerPanel(P_LOGIN, {
 
   // This method is called when the object is registered.
   async initialize() {
-    //console.log(endpoint)
-
     App.addEnterHandler(this._button, this.loginButtonHandler)
-  },
-
-  // This method is called when the panel is about to be shown.
-  prepare() {
-    //console.log("Unauthed, requesting login with a button. yolo.")
-
-    return Promise.resolve(null)
-  },
-
-  // This method is called after the panel is shown
-  run() {
-    return Promise.resolve(null)
-  },
-
-  // This method is called when the panel is hidden
-  unregister() {
-    return Promise.resolve(null)
   }
 })
 
@@ -158,16 +139,6 @@ App.registerPanel(P_SAVING, {
     const {endpoint, email, apitoken} = await App.getSettings("endpoint", "email", "apitoken")
 
     return `${endpoint}/api/v1/bookmarks?auth_token=${email}:${apitoken}`
-  },
-
-  // This method is called when the object is registered.
-  initialize() {
-    return Promise.resolve(null)
-  },
-
-  // This method is called when the panel is about to be shown.
-  prepare() {
-    return Promise.resolve(null)
   },
 
   // This method is called after the panel is shown
@@ -212,11 +183,6 @@ App.registerPanel(P_SAVING, {
     App.changeIcon(BOOKMARK_ICON_FILL)
 
     return App.showPanel(P_DETAILS, json)
-  },
-
-  // This method is called when the panel is hidden
-  unregister() {
-    return Promise.resolve(null)
   }
 })
 
@@ -234,24 +200,9 @@ App.registerPanel(P_DETAILS, {
     this._descriptionInput.innerText = json.data.attributes.description
   },
 
-  // This method is called when the object is registered.
-  initialize() {
-    return Promise.resolve(null)
-  },
-
   // This method is called when the panel is about to be shown.
   prepare(json) {
     this.populateForm(json)
-  },
-
-  // This method is called after the panel is shown
-  run() {
-    return Promise.resolve(null)
-  },
-
-  // This method is called when the panel is hidden
-  unregister() {
-    return Promise.resolve(null)
   }
 })
 
@@ -261,24 +212,9 @@ App.registerPanel(P_ERROR, {
 
   _errorMessage: document.getElementById("error-message"),
 
-  // This method is called when the object is registered.
-  initialize() {
-    return Promise.resolve(null)
-  },
-
   // This method is called when the panel is about to be shown.
   prepare(error) {
     this._errorMessage.innerText = error.message
-  },
-
-  // This method is called after the panel is shown
-  run() {
-    return Promise.resolve(null)
-  },
-
-  // This method is called when the panel is hidden
-  unregister() {
-    return Promise.resolve(null)
   }
 })
 

@@ -47,17 +47,3 @@ async function messageHandler(event) {
 // Auth manager, listens for a message from the content script, which in turn
 // received a message from the page script.
 browser.runtime.onMessage.addListener(messageHandler)
-
-// Handle setting the environment up based off of if we're installed in
-// temporary mode or node
-browser.runtime.onInstalled.addListener((details) => {
-  //console.log("Extension installed", details)
-
-  if(details.temporary) {
-    //console.log("Setting endpoint to localhost")
-    browser.storage.local.set({ endpoint: "http://localhost:3000" })
-  } else {
-    //console.log("Setting endpoint to production")
-    browser.storage.local.set({ endpoint: "https://transientbug.ninja" })
-  }
-})
