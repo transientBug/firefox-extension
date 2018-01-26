@@ -2,8 +2,7 @@ dist: trusty
 sudo: false
 
 language: node_js
-nvm:
-  - "8.3.0"
+
 
 # only build pushes to master, force build branches and PRs
 branches:
