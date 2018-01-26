@@ -8,11 +8,23 @@
 
 <body>
   <form>
-    <label>transientBug Email<input type="email" id="email" /></label>
-    <br />
-    <label>transientBug API Token<input type="text" id="apitoken" /></label>
-    <br />
-    <button type="submit">Save</button>
+    <div class="field">
+      <label>transientBug Email<input type="email" id="email" /></label>
+    </div>
+
+    <div class="field">
+      <label>transientBug API Token<input type="text" id="apitoken" /></label>
+    </div>
+
+    <div class="hidden" id="dev-only">
+      <div class="field">
+        <label>endpoint<input type="text" id="endpoint" /></label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Save</button>
+    </div>
   </form>
 
   <script src="options.js"></script>
