@@ -18,65 +18,14 @@ const App = {
 
   async getSettings(...values) {
     const settings = await browser.storage.local.get([...values])
+
     return settings
-  },
-
-  async showPanel(panel, ...args) {
-    // Invalid panel... ?!?
-    if(!(panel in this._panels)) {
-      throw new Error("Something really bad happened. Unknown panel: " + panel)
-    }
-
-    this._previousPanel = this._currentPanel
-    this._currentPanel = panel
-
-    const panelObject = this._panels[panel]
-
-    // Initialize the panel before showing it.
-    if("prepare" in panelObject)
-      await panelObject.prepare(...args)
-
-    Object.keys(this._panels).forEach((panelKey) => {
-      const panelItem = this._panels[panelKey]
-
-      const panelElement = document.querySelector(panelItem.panelSelector)
-
-      if(!panelElement.classList.contains("hidden")) {
-        panelElement.classList.add("hidden")
-
-        if("unregister" in panelItem)
-          panelItem.unregister()
-      }
-    })
-
-    document.querySelector(panelObject.panelSelector).classList.remove("hidden")
-
-    if("run" in panelObject)
-      panelObject.run()
-  },
-
-  showPreviousPanel(...args) {
-    if(!this._previousPanel) {
-      throw new Error("Current panel not set!")
-    }
-
-    this.showPanel(this._previousPanel, ...args)
-  },
-
-  registerPanel(panelName, panelObject) {
-    this._panels[panelName] = panelObject
-
-    if("initialize" in panelObject)
-      panelObject.initialize()
   },
 
   async changeIcon(icon) {
     const activeTab = await this.currentTab()
 
-    browser.pageAction.setIcon({
-      tabId: activeTab.id,
-      path: icon
-    })
+    browser.pageAction.setIcon({ tabId: activeTab.id, path: icon })
   },
 
   addEnterHandler(element, handler) {
@@ -90,6 +39,57 @@ const App = {
         handler(e)
       }
     })
+  },
+
+  registerPanel(panelName, panelObject) {
+    this._panels[panelName] = panelObject
+
+    if("initialize" in panelObject)
+      panelObject.initialize()
+  },
+
+  showPreviousPanel(...args) {
+    if(!this._previousPanel)
+      throw new Error("Current panel not set!")
+
+    this.showPanel(this._previousPanel, ...args)
+  },
+
+  hideAllPanels() {
+    Object.keys(this._panels).forEach((panelKey) => {
+      const panelItem = this._panels[panelKey]
+
+      const panelElement = document.querySelector(panelItem.panelSelector)
+
+      if(!panelElement.classList.contains("hidden")) {
+        panelElement.classList.add("hidden")
+
+        if("unregister" in panelItem)
+          panelItem.unregister()
+      }
+    })
+  },
+
+  async showPanel(panel, ...args) {
+    // Invalid panel... ?!?
+    if(!(panel in this._panels))
+      throw new Error("Something really bad happened. Unknown panel: " + panel)
+
+    this._previousPanel = this._currentPanel
+    this._currentPanel = panel
+
+    const panelObject = this._panels[panel]
+
+    // Initialize the panel before showing it.
+    if("prepare" in panelObject)
+      await panelObject.prepare(...args)
+
+    this.hideAllPanels()
+
+    document.querySelector(panelObject.panelSelector).classList.remove("hidden")
+
+    if("run" in panelObject)
+      panelObject.run()
   },
 
   async init() {
@@ -113,21 +113,23 @@ const P_ERROR = "error"
 App.registerPanel(P_LOGIN, {
   panelSelector: ".login-panel",
 
-  // This method is called when the object is registered.
-  async initialize() {
+  _button: document.querySelector(".login-button"),
+
+  async loginButtonHandler() {
     const {endpoint} = await App.getSettings("endpoint")
 
+    browser.tabs.create({ url: `${endpoint}/profile?pairing=true` })
+
+    //console.log("Opening profile page to grab api token")
+
+    window.close()
+  },
+
+  // This method is called when the object is registered.
+  async initialize() {
     //console.log(endpoint)
 
-    App.addEnterHandler(document.querySelector(".login-button"), async function () {
-      await browser.tabs.create({
-        url: `${endpoint}/profile?pairing=true`
-      })
-
-      //console.log("Opening profile page to grab api token")
-
-      window.close()
-    })
+    App.addEnterHandler(this._button, this.loginButtonHandler)
   },
 
   // This method is called when the panel is about to be shown.
@@ -202,9 +204,8 @@ App.registerPanel(P_SAVING, {
 
     //console.log("Got response back from server", response)
 
-    if(!response.ok) {
+    if(!response.ok)
       throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
-    }
 
     const json = await response.json()
 
@@ -222,7 +223,16 @@ App.registerPanel(P_SAVING, {
 
 App.registerPanel(P_DETAILS, {
   panelSelector: ".details-panel",
-  _payload: {},
+
+  _titleInput: document.getElementById("details-title"),
+  _tagsInput: document.getElementById("details-tags"),
+  _descriptionInput: document.getElementById("details-description"),
+
+  populateForm(json) {
+    this._titleInput.value           = json.data.attributes.title
+    this._tagsInput.value            = json.data.attributes.tags.join(", ")
+    this._descriptionInput.innerText = json.data.attributes.description
+  },
 
   // This method is called when the object is registered.
   initialize() {
@@ -231,17 +241,7 @@ App.registerPanel(P_DETAILS, {
 
   // This method is called when the panel is about to be shown.
   prepare(json) {
-    this._payload = json
-
-    const titleInput = document.getElementById("details-title")
-    const tagsInput = document.getElementById("details-tags")
-    const descriptionInput = document.getElementById("details-description")
-
-    titleInput.value = json.data.attributes.title
-    tagsInput.value = json.data.attributes.tags.join(", ")
-    descriptionInput.innerText = json.data.attributes.description
-
-    return Promise.resolve(null)
+    this.populateForm(json)
   },
 
   // This method is called after the panel is shown
@@ -259,6 +259,8 @@ App.registerPanel(P_DETAILS, {
 App.registerPanel(P_ERROR, {
   panelSelector: ".error-panel",
 
+  _errorMessage: document.getElementById("error-message"),
+
   // This method is called when the object is registered.
   initialize() {
     return Promise.resolve(null)
@@ -266,13 +268,7 @@ App.registerPanel(P_ERROR, {
 
   // This method is called when the panel is about to be shown.
   prepare(error) {
-    //console.log(error)
-
-    const errorMessage = document.getElementById("error-message")
-
-    errorMessage.innerText = error.message
-
-    return Promise.resolve(null)
+    this._errorMessage.innerText = error.message
   },
 
   // This method is called after the panel is shown

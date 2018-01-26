@@ -1,13 +1,18 @@
+async function getActiveTab() {
+  const activeTabs = await browser.tabs.query({active: true, currentWindow: true})
+
+  if(activeTabs.length < 1)
+    throw new Error("No active tabs found!")
+
+  const activeTab = activeTabs[0]
+
+  return activeTab
+}
+
 // Enable and show the page action. Supposedly if you have a show_matches in
 // the manifest, this isn't needed but that hasn't been working for me.
 async function updateActiveTab() {
-  const activeTabs = await browser.tabs.query({active: true, currentWindow: true})
-
-  if(activeTabs.length < 1) {
-    throw new Error("No active tabs found!")
-  }
-
-  const activeTab = activeTabs[0]
+  const activeTab = await getActiveTab()
 
   //console.log("Window changed or updated, showing page action", activeTab)
 
@@ -26,26 +31,22 @@ browser.windows.onFocusChanged.addListener(updateActiveTab)
 // update when the extension loads initially
 updateActiveTab()
 
+async function messageHandler(event) {
+  //console.log("Got message from content script", event)
 
-const handlers = {
-  authData: (event) => {
-    browser.storage.local.set(event.payload)
+  browser.storage.local.set(event.payload)
 
-    //console.log("Replying to content script with ack")
-    browser.tabs.getCurrent().then((activeTab) => {
-      browser.tabs.sendMessage(activeTab.id, {
-        type: "ack"
-      })
-    })
-  }
+  const activeTab = await getActiveTab()
+
+  //console.log("Replying to content script with ack")
+  browser.tabs.sendMessage(activeTab.id, {
+    type: "ack"
+  })
 }
 
 // Auth manager, listens for a message from the content script, which in turn
 // received a message from the page script.
-browser.runtime.onMessage.addListener((event) => {
-  //console.log("Got message from content script", event)
-  handlers[event.type](event)
-})
+browser.runtime.onMessage.addListener(messageHandler)
 
 // Handle setting the environment up based off of if we're installed in
 // temporary mode or node
