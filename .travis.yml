@@ -5,6 +5,9 @@ language: node_js
 nvm:
   - "8.9"
 
+node_js:
+  - "8.9"
+
 # only build pushes to master, force build branches and PRs
 branches:
   only:
