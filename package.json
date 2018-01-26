@@ -34,7 +34,7 @@
     "lint:addon": "addons-linter src --self-hosted",
     "lint:css": "stylelint src/**/*.css",
     "lint:html": "htmllint src/**/*.html",
-    "lint:js": "eslint src/*.js",
+    "lint:js": "eslint src/**/*.js",
     "package": "rm -rf src/web-ext-artifacts && npm run build && mv src/web-ext-artifacts/*.zip addon.xpi",
     "test": "npm run lint"
   }

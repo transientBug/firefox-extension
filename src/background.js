@@ -1,6 +1,6 @@
 // Enable and show the page action. Supposedly if you have a show_matches in
 // the manifest, this isn't needed but that hasn't been working for me.
-async function updateActiveTab(tabs) {
+async function updateActiveTab() {
   const activeTabs = await browser.tabs.query({active: true, currentWindow: true})
 
   if(activeTabs.length < 1) {
@@ -9,7 +9,7 @@ async function updateActiveTab(tabs) {
 
   const activeTab = activeTabs[0]
 
-  console.log("Window changed or updated, showing page action", activeTab)
+  //console.log("Window changed or updated, showing page action", activeTab)
 
   browser.pageAction.show(activeTab.id)
 }
@@ -31,7 +31,7 @@ const handlers = {
   authData: (event) => {
     browser.storage.local.set(event.payload)
 
-    console.log("Replying to content script with ack")
+    //console.log("Replying to content script with ack")
     browser.tabs.getCurrent().then((activeTab) => {
       browser.tabs.sendMessage(activeTab.id, {
         type: "ack"
@@ -41,22 +41,22 @@ const handlers = {
 }
 
 // Auth manager, listens for a message from the content script, which in turn
-// recieved a message from the page script.
+// received a message from the page script.
 browser.runtime.onMessage.addListener((event) => {
-  console.log("Got message from content script", event)
+  //console.log("Got message from content script", event)
   handlers[event.type](event)
 })
 
 // Handle setting the environment up based off of if we're installed in
 // temporary mode or node
 browser.runtime.onInstalled.addListener((details) => {
-  console.log("Extension installed", details)
+  //console.log("Extension installed", details)
 
   if(details.temporary) {
-    console.log("Setting endpoint to localhost")
+    //console.log("Setting endpoint to localhost")
     browser.storage.local.set({ endpoint: "http://localhost:3000" })
   } else {
-    console.log("Setting endpoint to production")
+    //console.log("Setting endpoint to production")
     browser.storage.local.set({ endpoint: "https://transientbug.ninja" })
   }
 })

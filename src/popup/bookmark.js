@@ -1,4 +1,4 @@
-const BOOKMARK_ICON_OUTLINE = "../icons/ic_bookmark_border_black_24dp_2x.png"
+//const BOOKMARK_ICON_OUTLINE = "../icons/ic_bookmark_border_black_24dp_2x.png"
 const BOOKMARK_ICON_FILL    = "../icons/ic_bookmark_black_24dp_2x.png"
 
 
@@ -117,14 +117,14 @@ App.registerPanel(P_LOGIN, {
   async initialize() {
     const {endpoint} = await App.getSettings("endpoint")
 
-    console.log(endpoint)
+    //console.log(endpoint)
 
     App.addEnterHandler(document.querySelector(".login-button"), async function () {
       await browser.tabs.create({
         url: `${endpoint}/profile?pairing=true`
       })
 
-      console.log("Opening profile page to grab api token")
+      //console.log("Opening profile page to grab api token")
 
       window.close()
     })
@@ -132,7 +132,7 @@ App.registerPanel(P_LOGIN, {
 
   // This method is called when the panel is about to be shown.
   prepare() {
-    console.log("Unauthed, requesting login with a button. yolo.")
+    //console.log("Unauthed, requesting login with a button. yolo.")
 
     return Promise.resolve(null)
   },
@@ -173,7 +173,7 @@ App.registerPanel(P_SAVING, {
     const activeTab = await App.currentTab()
     const url = await this.url()
 
-    console.log("Sending bookmark request for active tab", activeTab)
+    //console.log("Sending bookmark request for active tab", activeTab)
 
     const data = {
       data: {
@@ -196,11 +196,11 @@ App.registerPanel(P_SAVING, {
       body: JSON.stringify(data)
     }
 
-    console.log(`Sending to ${url}`, fetchParams)
+    //console.log(`Sending to ${url}`, fetchParams)
 
     const response = await fetch(url, fetchParams)
 
-    console.log("Got response back from server", response)
+    //console.log("Got response back from server", response)
 
     if(!response.ok) {
       throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
@@ -266,7 +266,7 @@ App.registerPanel(P_ERROR, {
 
   // This method is called when the panel is about to be shown.
   prepare(error) {
-    console.log(error)
+    //console.log(error)
 
     const errorMessage = document.getElementById("error-message")
 
