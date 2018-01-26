@@ -35,7 +35,7 @@
     "lint:css": "stylelint src/**/*.css",
     "lint:html": "htmllint src/**/*.html",
     "lint:js": "eslint src/**/*.js",
-    "package": "rm -rf src/web-ext-artifacts && npm run build && mv src/web-ext-artifacts/*.zip addon.xpi",
+    "package": "rm -rf src/web-ext-artifacts && npm run build && mv src/web-ext-artifacts/transientbug-*.zip addon.xpi",
     "test": "npm run lint"
   }
 }
