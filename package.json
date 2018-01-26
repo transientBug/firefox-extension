@@ -1,0 +1,41 @@
+{
+  "name": "",
+  "title": "",
+  "description": "",
+  "version": "0.1.0",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/transientBug/firefox-extension/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "addons-linter": "^0.15.14",
+    "eslint": "^3.17.1",
+    "eslint-plugin-no-unsanitized": "^2.0.0",
+    "eslint-plugin-promise": "^3.4.0",
+    "htmllint-cli": "^0.0.5",
+    "json": "^9.0.6",
+    "npm-run-all": "^4.0.0",
+    "stylelint": "^7.9.0",
+    "stylelint-config-standard": "^16.0.0",
+    "stylelint-order": "^0.3.0",
+    "web-ext": "^2.2.2"
+  },
+  "homepage": "https://github.com/transientBug/firefox-extension#readme",
+  "license": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transientBug/firefox-extension.git"
+  },
+  "scripts": {
+    "build": "npm test && cd src && web-ext build --overwrite-dest",
+    "lint": "npm-run-all lint:*",
+    "lint:addon": "addons-linter src --self-hosted",
+    "lint:css": "stylelint src/**/*.css",
+    "lint:html": "htmllint src/**/*.html",
+    "lint:js": "eslint src/**/*.js",
+    "package": "rm -rf src/web-ext-artifacts && npm run build && mv src/web-ext-artifacts/transientbug-*.zip addon.xpi",
+    "test": "npm run lint"
+  }
+}

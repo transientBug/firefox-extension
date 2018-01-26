@@ -57,3 +57,16 @@ typings/
 # dotenv environment variables file
 .env
 
+.DS_Store
+package-lock.json
+node_modules
+README.html
+*.xpi
+*.sw*
+.vimrc
+.env
+addon.env
+
+*.un~
+
+src/web-ext-artifacts/*

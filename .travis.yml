@@ -1,0 +1,12 @@
+dist: trusty
+sudo: false
+
+language: node_js
+node_js:
+  - "8"
+
+# only build pushes to master, force build branches and PRs
+branches:
+  only:
+    - master
+    - /force-build$/ # allow for developers to force CI builds if required before PR
