@@ -22,8 +22,8 @@ async function restoreOptions() {
   _apitokenField.value = result.apitoken
   _endpointField.value = result.endpoint
 
-  if(result.env == "DEV")
-    _endpointField.classList.remove("hidden")
+  if(result.env === "DEV")
+    _devFields.classList.remove("hidden")
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions)
