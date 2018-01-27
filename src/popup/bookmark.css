@@ -183,8 +183,8 @@ legend {
 }
 
 input[type="text"] {
-  border: 1px solid #d8d8d8;
   block-size: 36px;
+  border: 1px solid #d8d8d8;
   border-radius: 3px;
   font-size: 14px;
   inline-size: 100%;
@@ -195,8 +195,8 @@ input[type="text"] {
 }
 
 textarea {
-  border: 1px solid #d8d8d8;
   block-size: 80px;
+  border: 1px solid #d8d8d8;
   border-radius: 3px;
   font-size: 14px;
   inline-size: 100%;
