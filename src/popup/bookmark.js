@@ -190,19 +190,71 @@ App.registerPanel(P_SAVING, {
 App.registerPanel(P_DETAILS, {
   panelSelector: ".details-panel",
 
+  _payload: {},
+
   _titleInput: document.getElementById("details-title"),
   _tagsInput: document.getElementById("details-tags"),
   _descriptionInput: document.getElementById("details-description"),
 
-  populateForm(json) {
-    this._titleInput.value           = json.data.attributes.title
-    this._tagsInput.value            = json.data.attributes.tags.join(", ")
-    this._descriptionInput.innerText = json.data.attributes.description
+  _button: document.querySelector(".update-button"),
+
+  async url() {
+    const {endpoint, email, apitoken} = await App.getSettings("endpoint", "email", "apitoken")
+
+    return `${endpoint}/api/v1/bookmarks/${this._payload.data.id}?auth_token=${email}:${apitoken}`
+  },
+
+  async updateButtonHandler() {
+    const url = await this.url()
+
+    const tags = this._tagsInput.value.split(",")
+
+    const payload = {
+      data: {
+        type: "bookmark",
+        id: this._payload.data.id,
+        attributes: {
+          title: this._titleInput.value,
+          tags: tags,
+          description: this._descriptionInput.innerText
+        }
+      }
+    }
+
+    const headers = new Headers({
+      "Content-Type": "application/vnd.api+json",
+      "Accept": "application/vnd.api+json"
+    })
+
+    const fetchParams = {
+      method: "PATCH",
+      headers: headers,
+      body: JSON.stringify(payload)
+    }
+
+    //console.log(`Sending to ${url}`, fetchParams)
+
+    const response = await fetch(url, fetchParams)
+
+    if(!response.ok)
+      throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
+
+    window.close()
+  },
+
+  populateForm() {
+    this._titleInput.value           = this._payload.data.attributes.title
+    this._tagsInput.value            = this._payload.data.attributes.tags.join(", ")
+    this._descriptionInput.innerText = this._payload.data.attributes.description
   },
 
   // This method is called when the panel is about to be shown.
   prepare(json) {
-    this.populateForm(json)
+    this._payload = json
+
+    this.populateForm()
+
+    App.addEnterHandler(this._button, this.updateButtonHandler.bind(this))
   }
 })
 
