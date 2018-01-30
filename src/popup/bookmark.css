@@ -1,3 +1,8 @@
+/*
+ * A lot of this is copied from and then heavily modified from
+ * the mozilla multi-container extensions css
+ * https://github.com/mozilla/multi-account-containers/blob/master/src/css/popup.css
+ * */
 * {
   font-size: inherit;
   margin-block-end: 0;
@@ -22,6 +27,205 @@ body {
   max-inline-size: 300px;
 }
 
+:root {
+  --primary-outline-color: #d8d8d8;
+  --primary-action-color: #248aeb;
+  --title-text-color: #000;
+  --text-normal-color: #4a4a4a;
+
+  /* calculated from 12px */
+  --font-size-heading: 1.33rem; /* 16px */
+  --block-line-space-size: 0.5rem; /* 6px */
+
+  /* Use for url and icon size */
+  --block-url-label-size: 2rem; /* 24px */
+  --inline-button-size: 5.833rem; /* 70px */
+
+  --small-text-size: 0.833rem; /* 10px */
+  --small-radius: 3px;
+}
+
+@media (min-resolution: 1dppx) {
+  html {
+    font-size: 14px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+.big-button {
+  align-items: center;
+  background-color: #0996f8;
+  border-radius: 3px;
+  color: white;
+  display: flex;
+  flex: 0 0 44px;
+  font-size: 14px;
+  inline-size: 100%;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 75ms;
+}
+
+.big-button:hover,
+.big-button:active {
+  background-color: #0675d3;
+}
+
+.button {
+  align-items: center;
+  block-size: var(--block-url-label-size);
+  border: 1px solid var(--primary-outline-color);
+  border-radius: var(--small-radius);
+  color: var(--title-text-color);
+  display: flex;
+  font-size: var(--small-text-size);
+  inline-size: var(--inline-button-size);
+  justify-content: center;
+  text-decoration: none;
+}
+
+.button:hover,
+.button:focus {
+  background: #f2f2f2;
+}
+
+a.button:link {
+  color: var(--primary-action-color);
+  text-decoration: none;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-block-size: 100px;
+}
+
+.panel * {
+  text-align: center;
+}
+
+.panel {
+  margin-block-end: 5px;
+  margin-block-start: 5px;
+  margin-inline-end: 5px;
+  margin-inline-start: 5px;
+}
+
+.login-panel {
+  block-size: 150px;
+  min-block-size: 150px;
+}
+
+.panel p {
+  color: var(--text-normal-color);
+  font-size: 14px;
+  margin-block-end: 16px;
+  max-inline-size: 100%;
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+img.logo {
+  block-size: 50px;
+}
+
+.logo {
+  color: #43484e;
+  font-size: 2rem;
+  margin-block-end: 0;
+  margin-block-start: 0;
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+  max-inline-size: 100%;
+}
+
+.title {
+  color: #43484e;
+  font-size: var(--font-size-heading);
+  margin-block-end: 0;
+  margin-block-start: 0;
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+  max-inline-size: 100%;
+}
+
+.panel-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: var(--block-line-space-size);
+  margin-block-start: var(--block-line-space-size);
+}
+
+fieldset {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  inline-size: 100%;
+  margin-block-end: 10px;
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+  padding-block-end: 0;
+  padding-block-start: 0;
+  padding-inline-end: 0;
+  padding-inline-start: 0;
+}
+
+fieldset:last-of-type {
+  margin-block-end: 0;
+}
+
+legend {
+  flex: 1 0;
+  font-size: 14px !important;
+  padding-block-end: 6px;
+}
+
+input[type="text"] {
+  block-size: 36px;
+  border: 1px solid var(--primary-outline-color);
+  border-radius: 3px;
+  font-size: 14px;
+  inline-size: 100%;
+  padding-block-end: 5px;
+  padding-block-start: 5px;
+  padding-inline-end: 5px;
+  padding-inline-start: 5px;
+}
+
+textarea {
+  block-size: 80px;
+  border: 1px solid var(--primary-outline-color);
+  border-radius: 3px;
+  font-size: 14px;
+  inline-size: 100%;
+  padding-block-end: 5px;
+  padding-block-start: 5px;
+  padding-inline-end: 5px;
+  padding-inline-start: 5px;
+}
+
+input[type="text"]:active,
+input[type="text"]:focus {
+  border: 1px solid var(--primary-action-color);
+}
+
+textarea:active,
+textarea:focus {
+  border: 1px solid var(--primary-action-color);
 }

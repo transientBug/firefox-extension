@@ -42,7 +42,10 @@
   },
 
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background/active-tab.js",
+      "background/install.js"
+    ]
   },
 
   "content_scripts": [
@@ -52,7 +55,9 @@
         "*://localhost/profile*"
       ],
 
-      "js": ["content-script.js"],
+      "js": [
+        "content-scripts/auth.js"
+      ],
 
       "run_at": "document_idle"
     }
