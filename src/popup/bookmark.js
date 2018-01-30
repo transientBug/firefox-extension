@@ -216,7 +216,7 @@ App.registerPanel(P_DETAILS, {
         attributes: {
           title: this._titleInput.value,
           tags: tags,
-          description: this._descriptionInput.innerText
+          description: this._descriptionInput.value
         }
       }
     }
