@@ -19,7 +19,8 @@
 
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "identity"
   ],
 
   "page_action": {
@@ -44,22 +45,8 @@
   "background": {
     "scripts": [
       "background/active-tab.js",
-      "background/install.js"
+      "background/install.js",
+      "background/auth.js"
     ]
-  },
-
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*.transientbug.ninja/profile*",
-        "*://localhost/profile*"
-      ],
-
-      "js": [
-        "content-scripts/auth.js"
-      ],
-
-      "run_at": "document_idle"
-    }
-  ]
+  }
 }

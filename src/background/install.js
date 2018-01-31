@@ -9,6 +9,9 @@ async function afterInstall(details) {
       env: "DEV",
       endpoint: "http://localhost:3000"
     }
+
+    let redirectURL = browser.identity.getRedirectURL()
+    console.log(`Redirect URL ${redirectURL}`)
   } else {
     data = {
       env: "PROD",

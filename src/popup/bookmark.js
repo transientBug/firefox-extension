@@ -95,11 +95,11 @@ const App = {
   async init() {
     const {email, apitoken} = await App.getSettings("email", "apitoken")
 
-    if(!email || !apitoken) {
+    //if(!email || !apitoken) {
       this.showPanel(P_LOGIN)
-    } else {
-      this.showPanel(P_SAVING)
-    }
+    //} else {
+      //this.showPanel(P_SAVING)
+    //}
   }
 }
 
@@ -116,11 +116,10 @@ App.registerPanel(P_LOGIN, {
   _button: document.querySelector(".login-button"),
 
   async loginButtonHandler() {
-    const {endpoint} = await App.getSettings("endpoint")
+    //console.log("Opening oauth flow")
 
-    browser.tabs.create({ url: `${endpoint}/profile?pairing=true` })
-
-    //console.log("Opening profile page to grab api token")
+    const page = browser.extension.getBackgroundPage()
+    page.login()
 
     window.close()
   },
