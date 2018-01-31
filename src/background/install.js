@@ -7,7 +7,8 @@ async function afterInstall(details) {
   if(details.temporary) {
     data = {
       env: "DEV",
-      endpoint: "http://localhost:3000"
+      endpoint: "http://localhost:3000",
+      access_token: ""
     }
 
     let redirectURL = browser.identity.getRedirectURL()
