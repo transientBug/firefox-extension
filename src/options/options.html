@@ -7,29 +7,22 @@
 
   <link rel="stylesheet" href="options.css"/>
 </head>
-
 <body>
-  <form>
-    <div class="field">
-      <label>transientBug Email<input type="email" id="email" /></label>
-    </div>
+  <h1>Settings</h1>
 
-    <div class="field">
-      <label>transientBug API Token<input type="text" id="apitoken" /></label>
-    </div>
+  <div class="options">
+    <div><label for="email">Email</label></div>
+    <div><input id="email" type="email" /></div>
 
-    <div class="hidden" id="dev-only">
-      <div class="field">
-        <label>endpoint<input type="text" id="endpoint" /></label>
-      </div>
-    </div>
+    <div><label for="apitoken">API Token</label></div>
+    <div><input id="apitoken" type="text" /></div>
+  </div>
 
-    <div class="actions">
-      <button type="submit">Save</button>
-    </div>
-  </form>
+  <div class="hidden options" id="dev-only">
+    <div><label for="endpoint">[Dev] Endpoint</label></div>
+    <div><input id="endpoint" type="text"/></div>
+  </div>
 
   <script src="options.js"></script>
 </body>
-
 </html>
