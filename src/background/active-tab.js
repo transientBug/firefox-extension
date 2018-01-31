@@ -30,20 +30,3 @@ browser.windows.onFocusChanged.addListener(updateActiveTab)
 
 // update when the extension loads initially
 updateActiveTab()
-
-async function messageHandler(event) {
-  //console.log("Got message from content script", event)
-
-  browser.storage.local.set(event.payload)
-
-  const activeTab = await getActiveTab()
-
-  //console.log("Replying to content script with ack")
-  browser.tabs.sendMessage(activeTab.id, {
-    type: "ack"
-  })
-}
-
-// Auth manager, listens for a message from the content script, which in turn
-// received a message from the page script.
-browser.runtime.onMessage.addListener(messageHandler)

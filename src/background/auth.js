@@ -22,33 +22,26 @@ async function login() {
     url: oauthEndpoint
   })
 
-  console.log(redirectedUrl)
+  //console.log(redirectedUrl)
 
   const code = extractCode(redirectedUrl)
 
-  const tokenEndpoint = `${endpoint}/oauth/token`
+  const tokenEndpoint = `${endpoint}/oauth/token?client_id=${appId}&client_secret=${appSecret}&grant_type=authorization_code&redirect_uri=${encodeURIComponent(redirectURL)}&code=${code}`
 
   const headers = new Headers({
-    "Content-Type": "application/json",
-    "Accept": "application/json"
+    "Accept": "application/json",
+    "Content-Type": "application/json"
   })
-
-  const formData  = new FormData()
-
-  formData.append("client_id", appId)
-  formData.append("client_secret", appSecret)
-  formData.append("redirect_uri", redirectURL)
-  formData.append("grant_type", "authorization_code")
-  formData.append("code", code)
 
   const fetchParams = {
     method: "POST",
-    body: formData
+    headers: headers
   }
 
-  debugger
-
   const response = await fetch(tokenEndpoint, fetchParams)
+  const json = await response.json()
 
-  debugger
+  //console.log(json)
+
+  browser.storage.local.set({"access_token": json.access_token})
 }

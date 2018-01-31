@@ -93,13 +93,13 @@ const App = {
   },
 
   async init() {
-    const {email, apitoken} = await App.getSettings("email", "apitoken")
+    const {access_token} = await App.getSettings("access_token")
 
-    //if(!email || !apitoken) {
+    if(!access_token) {
       this.showPanel(P_LOGIN)
-    //} else {
-      //this.showPanel(P_SAVING)
-    //}
+    } else {
+      this.showPanel(P_SAVING)
+    }
   }
 }
 
@@ -135,15 +135,16 @@ App.registerPanel(P_SAVING, {
   panelSelector: ".saving-panel",
 
   async url() {
-    const {endpoint, email, apitoken} = await App.getSettings("endpoint", "email", "apitoken")
+    const {endpoint} = await App.getSettings("endpoint")
 
-    return `${endpoint}/api/v1/bookmarks?auth_token=${email}:${apitoken}`
+    return `${endpoint}/api/v1/bookmarks`
   },
 
   // This method is called after the panel is shown
   async run() {
     const activeTab = await App.currentTab()
     const url = await this.url()
+    const {access_token} = await App.getSettings("access_token")
 
     //console.log("Sending bookmark request for active tab", activeTab)
 
@@ -159,7 +160,8 @@ App.registerPanel(P_SAVING, {
 
     const headers = new Headers({
       "Content-Type": "application/vnd.api+json",
-      "Accept": "application/vnd.api+json"
+      "Accept": "application/vnd.api+json",
+      "Authorization": `Bearer ${access_token}`
     })
 
     const fetchParams = {
@@ -198,13 +200,14 @@ App.registerPanel(P_DETAILS, {
   _button: document.querySelector(".update-button"),
 
   async url() {
-    const {endpoint, email, apitoken} = await App.getSettings("endpoint", "email", "apitoken")
+    const {endpoint} = await App.getSettings("endpoint")
 
-    return `${endpoint}/api/v1/bookmarks/${this._payload.data.id}?auth_token=${email}:${apitoken}`
+    return `${endpoint}/api/v1/bookmarks/${this._payload.data.id}`
   },
 
   async updateButtonHandler() {
     const url = await this.url()
+    const {access_token} = await App.getSettings("access_token")
 
     const tags = this._tagsInput.value.split(",")
 
@@ -222,7 +225,8 @@ App.registerPanel(P_DETAILS, {
 
     const headers = new Headers({
       "Content-Type": "application/vnd.api+json",
-      "Accept": "application/vnd.api+json"
+      "Accept": "application/vnd.api+json",
+      "Authorization": `Bearer ${access_token}`
     })
 
     const fetchParams = {
