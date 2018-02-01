@@ -1,5 +1,3 @@
-const APP_ID = "cad18a8d91f3675493058223c0dbf3905de1d8c38b23fad22391f53156d44827"
-
 function extractAcccessToken(redirectUri) {
   const m = redirectUri.match(/[#?](.*)/)
   if (!m || m.length < 1)
@@ -9,12 +7,12 @@ function extractAcccessToken(redirectUri) {
   return params.get("access_token")
 }
 
+// eslint-disable-next-line no-unused-vars
 async function login() {
-  const {endpoint} = await browser.storage.local.get(["endpoint"])
-
+  const {endpoint, appid} = await browser.storage.local.get(["endpoint", "appid"])
   const redirectURL = encodeURIComponent(browser.identity.getRedirectURL())
 
-  const oauthEndpoint = `${endpoint}/oauth/authorize?client_id=${APP_ID}&redirect_uri=${redirectURL}&response_type=token`
+  const oauthEndpoint = `${endpoint}/oauth/authorize?client_id=${appid}&redirect_uri=${redirectURL}&response_type=token`
 
   const redirectedUrl = await browser.identity.launchWebAuthFlow({
     interactive: true,

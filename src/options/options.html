@@ -11,14 +11,16 @@
   <h1>Settings</h1>
 
   <div class="options">
-    <div><label for="email">Email</label></div>
-    <div><input id="email" type="email" /></div>
-
-    <div><label for="apitoken">API Token</label></div>
-    <div><input id="apitoken" type="text" /></div>
+    <div><button id="logout">Logout</button></div>
   </div>
 
   <div class="hidden options" id="dev-only">
+    <div><label for="redirecturl">[DEV] Extensions Redirect URL</label></div>
+    <div><input id="redirecturl" type="text" readonly="readonly" /></div>
+
+    <div><label for="appid">[DEV] Client ID</label></div>
+    <div><input id="appid" type="text" /></div>
+
     <div><label for="endpoint">[Dev] Endpoint</label></div>
     <div><input id="endpoint" type="text"/></div>
   </div>
