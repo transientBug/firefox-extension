@@ -107,7 +107,7 @@ a.button:link {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-block-size: 100px;
+  min-block-size: 150px;
 }
 
 .panel * {
@@ -122,8 +122,8 @@ a.button:link {
 }
 
 .login-panel {
-  block-size: 150px;
-  min-block-size: 150px;
+  block-size: 200px;
+  min-block-size: 200px;
 }
 
 .panel p {

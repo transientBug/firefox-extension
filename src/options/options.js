@@ -1,42 +1,54 @@
+const _logoutButton = document.getElementById("logout")
+
+
 const _devFields = document.getElementById("dev-only")
 
-const _emailField = document.getElementById("email")
-const _apitokenField = document.getElementById("apitoken")
-
+const _redirectUrlField = document.getElementById("redirecturl")
+const _appidField = document.getElementById("appid")
 const _endpointField = document.getElementById("endpoint")
+
 
 async function saveOptions(e) {
   e.preventDefault()
 
   const result = await browser.storage.local.get(["env"])
 
-  browser.storage.local.set({
-    email: _emailField.value,
-    apitoken: _apitokenField.value
-  })
+  if(result.env !== "DEV")
+    return
 
-  if(result.env === "DEV") {
-    browser.storage.local.set({
-      endpoint: _endpointField.value
-    })
-  }
+  browser.storage.local.set({
+    appid: _appidField.value,
+    endpoint: _endpointField.value
+  })
+}
+
+async function logout(e) {
+  e.preventDefault()
+
+  browser.storage.local.set({
+    accesstoken: null
+  })
 }
 
 async function restoreOptions() {
   const result = await browser.storage.local.get()
 
-  _emailField.value = result.email
-  _apitokenField.value = result.apitoken
+  if(result.env !== "DEV")
+    return
 
-  _emailField.addEventListener("blur", saveOptions)
-  _apitokenField.addEventListener("blur", saveOptions)
+  const redirectURL = browser.identity.getRedirectURL()
 
-  if(result.env === "DEV") {
-    _devFields.classList.remove("hidden")
+  _devFields.classList.remove("hidden")
 
-    _endpointField.value = result.endpoint
-    _endpointField.addEventListener("blur", saveOptions)
-  }
+  _redirectUrlField.value = redirectURL
+
+  _endpointField.value = result.endpoint
+  _appidField.value = result.appid
+
+  Array.from(document.getElementsByTagName("input"))
+    .forEach((el) => el.addEventListener("blur", saveOptions))
 }
 
+
 document.addEventListener("DOMContentLoaded", restoreOptions)
+_logoutButton.addEventListener("click", logout)
