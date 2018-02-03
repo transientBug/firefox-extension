@@ -7,8 +7,6 @@ const _redirectUrlField = document.getElementById("redirecturl")
 const _appidField = document.getElementById("appid")
 const _endpointField = document.getElementById("endpoint")
 
-const saveableFields = [ _endpointField, _appidField ]
-
 
 async function saveOptions(e) {
   e.preventDefault()
@@ -47,7 +45,8 @@ async function restoreOptions() {
   _endpointField.value = result.endpoint
   _appidField.value = result.appid
 
-  saveableFields.forEach((field) => field.addEventListener("blur", saveOptions))
+  Array.from(document.getElementsByTagName("input"))
+    .forEach((el) => el.addEventListener("blur", saveOptions))
 }
 
 
