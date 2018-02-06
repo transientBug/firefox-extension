@@ -22,6 +22,10 @@ const App = {
     return settings
   },
 
+  async setSettings(values) {
+    await browser.storage.local.set(values)
+  },
+
   async changeIcon(icon) {
     const activeTab = await this.currentTab()
 
@@ -116,8 +120,6 @@ App.registerPanel(P_LOGIN, {
   _button: document.querySelector(".login-button"),
 
   async loginButtonHandler() {
-    //console.log("Opening oauth flow")
-
     const page = browser.extension.getBackgroundPage()
     page.login()
 
@@ -140,13 +142,16 @@ App.registerPanel(P_SAVING, {
     return `${endpoint}/api/v1/bookmarks`
   },
 
+  async handleLogout() {
+    await App.setSettings({ "access_token": null })
+    App.showPanel(P_LOGIN)
+  },
+
   // This method is called after the panel is shown
   async run() {
     const activeTab = await App.currentTab()
     const url = await this.url()
     const {access_token} = await App.getSettings("access_token")
-
-    //console.log("Sending bookmark request for active tab", activeTab)
 
     const data = {
       data: {
@@ -170,11 +175,10 @@ App.registerPanel(P_SAVING, {
       body: JSON.stringify(data)
     }
 
-    //console.log(`Sending to ${url}`, fetchParams)
-
     const response = await fetch(url, fetchParams)
 
-    //console.log("Got response back from server", response)
+    if(response.status === 401)
+      return this.handleLogout()
 
     if(!response.ok)
       throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
@@ -203,6 +207,11 @@ App.registerPanel(P_DETAILS, {
     const {endpoint} = await App.getSettings("endpoint")
 
     return `${endpoint}/api/v1/bookmarks/${this._payload.data.id}`
+  },
+
+  async handleLogout() {
+    await App.setSettings({ "access_token": null })
+    App.showPanel(P_LOGIN)
   },
 
   async updateButtonHandler() {
@@ -235,9 +244,10 @@ App.registerPanel(P_DETAILS, {
       body: JSON.stringify(payload)
     }
 
-    //console.log(`Sending to ${url}`, fetchParams)
-
     const response = await fetch(url, fetchParams)
+
+    if(response.status === 401)
+      return this.handleLogout()
 
     if(!response.ok)
       throw new TypeError(`Non-Okay response back from the server: ${response.status}`)
