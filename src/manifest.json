@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "transientBug",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Allows for quick bookmarking of websites in transientBug",
   "homepage_url": "https://github.com/transientBug/firefox-extension",
 
