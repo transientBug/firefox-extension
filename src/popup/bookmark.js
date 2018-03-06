@@ -256,9 +256,9 @@ App.registerPanel(P_DETAILS, {
   },
 
   populateForm() {
-    this._titleInput.value           = this._payload.data.attributes.title
-    this._tagsInput.value            = this._payload.data.attributes.tags.join(", ")
-    this._descriptionInput.innerText = this._payload.data.attributes.description
+    this._titleInput.value             = this._payload.data.attributes.title
+    this._tagsInput.value              = this._payload.data.attributes.tags.join(", ")
+    this._descriptionInput.textContent = this._payload.data.attributes.description
   },
 
   // This method is called when the panel is about to be shown.
