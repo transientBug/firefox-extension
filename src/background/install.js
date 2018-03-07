@@ -1,4 +1,4 @@
-const APP_ID = ""
+const APP_ID = "755999239a453f73ab1108d0b94e194e3f54b51255283877f56ce6917e7f8995"
 
 // Handle setting the environment up based off of if we're installed in
 // temporary mode or node
