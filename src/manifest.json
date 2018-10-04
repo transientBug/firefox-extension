@@ -26,7 +26,7 @@
   "page_action": {
     "browser_style": true,
 
-    "show_matches": ["*://*/"],
+    "show_matches": ["*://*/*"],
     "hide_matches": [
       "*://*.transientbug.ninja/*",
       "*://localhost/*"
